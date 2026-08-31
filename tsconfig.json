@@ -19,7 +19,7 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"]//atajo que apunta a la raiz del proyecto, permitiendo importar módulos desde la carpeta src sin necesidad de especificar la ruta completa
     }
   },
   "include": [
