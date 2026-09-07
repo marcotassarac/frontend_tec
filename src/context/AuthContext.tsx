@@ -4,12 +4,17 @@ import { createContext, useCallback, useContext, useEffect, useState, ReactNode 
 import { useRouter } from "next/navigation";
 import * as authApi from "@/lib/api/auth";
 import { clearToken, setToken, getToken } from "@/lib/http";
-import type { Usuario } from "@/lib/types";
+import type { LoginResponse, Usuario } from "@/lib/types";
+
+export type LoginOutcome =
+  | { requiresTwoFactor: true; pendingSessionId: string }
+  | { requiresTwoFactor: false };
 
 interface AuthContextValue {
   usuario: Usuario | null;
   loading: boolean;
-  login: (username: string, password: string) => Promise<void>;
+  login: (username: string, password: string) => Promise<LoginOutcome>;
+  completeTwoFactor: (pendingSessionId: string, code: string) => Promise<void>;
   logout: () => void;
 }
 
@@ -39,18 +44,37 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     restaurarSesion();
   }, []);
 
-  const login = useCallback(async (username: string, password: string) => {
-    const response = await authApi.login(username, password);
-    setToken(response.token);
+  const aplicarSesion = useCallback((response: LoginResponse) => {
+    setToken(response.token as string);
     const usuarioLogeado: Usuario = {
-      id: response.id,
-      username: response.username,
-      nombreCompleto: response.nombreCompleto,
-      rol: response.rol,
+      id: response.id as number,
+      username: response.username as string,
+      nombreCompleto: response.nombreCompleto as string,
+      rol: response.rol as "ADMIN" | "OPERADOR",
     };
     window.localStorage.setItem(USER_KEY, JSON.stringify(usuarioLogeado));
     setUsuario(usuarioLogeado);
   }, []);
+
+  const login = useCallback(
+    async (username: string, password: string): Promise<LoginOutcome> => {
+      const response = await authApi.login(username, password);
+      if (response.requiresTwoFactor) {
+        return { requiresTwoFactor: true, pendingSessionId: response.pendingSessionId as string };
+      }
+      aplicarSesion(response);
+      return { requiresTwoFactor: false };
+    },
+    [aplicarSesion]
+  );
+
+  const completeTwoFactor = useCallback(
+    async (pendingSessionId: string, code: string) => {
+      const response = await authApi.verifyTwoFactor(pendingSessionId, code);
+      aplicarSesion(response);
+    },
+    [aplicarSesion]
+  );
 
   const logout = useCallback(() => {
     clearToken();
@@ -60,7 +84,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [router]);
 
   return (
-    <AuthContext.Provider value={{ usuario, loading, login, logout }}>
+    <AuthContext.Provider value={{ usuario, loading, login, completeTwoFactor, logout }}>
       {children}
     </AuthContext.Provider>
   );

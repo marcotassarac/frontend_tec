@@ -8,13 +8,25 @@ export interface Usuario {
 }
 
 export interface LoginResponse {
-  token: string;
-  tokenType: string;
-  id: number;
-  username: string;
-  nombreCompleto: string;
-  rol: "ADMIN" | "OPERADOR";
-  expiresInMs: number;
+  requiresTwoFactor: boolean;
+  pendingSessionId?: string | null;
+  token?: string | null;
+  tokenType?: string | null;
+  id?: number | null;
+  username?: string | null;
+  nombreCompleto?: string | null;
+  rol?: "ADMIN" | "OPERADOR" | null;
+  expiresInMs?: number;
+}
+
+export interface TwoFactorSetupResponse {
+  secret: string;
+  otpAuthUrl: string;
+  qrCodeImageBase64: string;
+}
+
+export interface TwoFactorStatusResponse {
+  totpEnabled: boolean;
 }
 
 export interface Categoria {

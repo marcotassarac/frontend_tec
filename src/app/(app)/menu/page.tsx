@@ -28,6 +28,12 @@ const OPCIONES = [
     descripcion: "Consulta de stock actual, alertas y kardex por producto.",
     icono: "📊",
   },
+  {
+    href: "/seguridad",
+    titulo: "Seguridad de la cuenta",
+    descripcion: "Activa la verificacion en dos pasos (TOTP) con tu app autenticadora.",
+    icono: "🔐",
+  },
 ];
 
 export default function MenuPage() {

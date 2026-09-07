@@ -10,6 +10,7 @@ const LINKS = [
   { href: "/productos", label: "Productos" },
   { href: "/movimientos", label: "Movimientos" },
   { href: "/reportes", label: "Reportes" },
+  { href: "/seguridad", label: "Seguridad" },
 ];
 
 export default function AppNav() {
