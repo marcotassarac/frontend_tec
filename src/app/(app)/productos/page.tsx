@@ -6,6 +6,7 @@ import * as categoriasApi from "@/lib/api/categorias";
 import { ApiError } from "@/lib/http";
 import type { Categoria, Producto, ProductoInput } from "@/lib/types";
 import Modal from "@/components/Modal";
+import { useAuth } from "@/context/AuthContext";
 
 const FORM_INICIAL: ProductoInput = {
   codigo: "",
@@ -21,6 +22,8 @@ const FORM_INICIAL: ProductoInput = {
 const formatoMoneda = new Intl.NumberFormat("es-CL", { style: "currency", currency: "CLP" });
 
 export default function ProductosPage() {
+  const { usuario } = useAuth();
+  const esAdmin = usuario?.rol === "ADMIN";
   const [productos, setProductos] = useState<Producto[]>([]);
   const [categorias, setCategorias] = useState<Categoria[]>([]);
   const [loading, setLoading] = useState(true);
@@ -95,7 +98,7 @@ export default function ProductosPage() {
   }
 
   async function handleEliminar(producto: Producto) {
-    if (!confirm(`¿Eliminar el producto "${producto.nombre}"?`)) return;
+    if (!confirm(`¿Eliminar el producto "${producto.nombre}"? Quedara inactivo y se conservara su historial de movimientos.`)) return;
     try {
       await productosApi.eliminarProducto(producto.id);
       await cargar();
@@ -187,12 +190,14 @@ export default function ProductosPage() {
                   >
                     Editar
                   </button>
-                  <button
-                    onClick={() => handleEliminar(producto)}
-                    className="text-sm font-medium text-red-500 hover:text-red-700"
-                  >
-                    Eliminar
-                  </button>
+                  {esAdmin && producto.activo && (
+                    <button
+                      onClick={() => handleEliminar(producto)}
+                      className="text-sm font-medium text-red-500 hover:text-red-700"
+                    >
+                      Eliminar
+                    </button>
+                  )}
                 </td>
               </tr>
             ))}

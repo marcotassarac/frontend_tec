@@ -4,18 +4,20 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 
-const LINKS = [
+const LINKS: { href: string; label: string; soloAdmin?: boolean }[] = [
   { href: "/menu", label: "Menu principal" },
   { href: "/categorias", label: "Categorias" },
   { href: "/productos", label: "Productos" },
   { href: "/movimientos", label: "Movimientos" },
   { href: "/reportes", label: "Reportes" },
+  { href: "/notificaciones", label: "Notificaciones", soloAdmin: true },
   { href: "/seguridad", label: "Seguridad" },
 ];
 
 export default function AppNav() {
   const pathname = usePathname();
   const { usuario, logout } = useAuth();
+  const links = LINKS.filter((link) => !link.soloAdmin || usuario?.rol === "ADMIN");
 
   return (
     <header className="border-b border-slate-200 bg-white">
@@ -23,7 +25,7 @@ export default function AppNav() {
         <div className="flex items-center gap-6">
           <span className="text-sm font-semibold text-slate-900">Gestor de Inventario</span>
           <nav className="flex flex-wrap gap-1">
-            {LINKS.map((link) => {
+            {links.map((link) => {
               const active = pathname === link.href;
               return (
                 <Link

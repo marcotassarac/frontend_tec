@@ -5,10 +5,13 @@ import * as categoriasApi from "@/lib/api/categorias";
 import { ApiError } from "@/lib/http";
 import type { Categoria } from "@/lib/types";
 import Modal from "@/components/Modal";
+import { useAuth } from "@/context/AuthContext";
 
 const FORM_INICIAL = { nombre: "", descripcion: "", activo: true };
 
 export default function CategoriasPage() {
+  const { usuario } = useAuth();
+  const esAdmin = usuario?.rol === "ADMIN";
   const [categorias, setCategorias] = useState<Categoria[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -136,12 +139,14 @@ export default function CategoriasPage() {
                   >
                     Editar
                   </button>
-                  <button
-                    onClick={() => handleEliminar(categoria)}
-                    className="text-sm font-medium text-red-500 hover:text-red-700"
-                  >
-                    Eliminar
-                  </button>
+                  {esAdmin && (
+                    <button
+                      onClick={() => handleEliminar(categoria)}
+                      className="text-sm font-medium text-red-500 hover:text-red-700"
+                    >
+                      Eliminar
+                    </button>
+                  )}
                 </td>
               </tr>
             ))}

@@ -123,3 +123,15 @@ export interface ApiErrorBody {
   message?: string;
   path?: string;
 }
+
+export interface NotificacionItem {
+  usuario: string;
+  rolUsuario: string;
+  tipoMovimiento: TipoMovimiento;
+  productoCodigo: string;
+  productoNombre: string;
+  cantidad: number;
+  stockResultante: number;
+  fechaMovimiento: string;
+  recibidoEn: string;
+}

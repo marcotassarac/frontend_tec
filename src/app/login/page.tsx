@@ -155,14 +155,6 @@ export default function LoginPage() {
             </button>
           </form>
         )}
-
-        {!pendingSessionId && (
-          <div className="mt-6 rounded-lg bg-slate-50 px-3 py-2 text-xs text-slate-500">
-            <p className="font-medium text-slate-600">Usuarios de prueba</p>
-            <p>admin / admin123 (ADMIN)</p>
-            <p>operador / operador123 (OPERADOR)</p>
-          </div>
-        )}
       </div>
     </div>
   );
