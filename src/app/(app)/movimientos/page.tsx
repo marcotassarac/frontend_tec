@@ -9,7 +9,7 @@ import type { Movimiento, Producto, TipoMovimiento } from "@/lib/types";
 const FORM_INICIAL = {
   productoId: 0,
   tipoMovimiento: "ENTRADA" as TipoMovimiento,
-  cantidad: 1,
+  cantidad: "1", // DEF-10: texto mientras se edita; se convierte a numero al registrar
   motivo: "",
 };
 
@@ -35,7 +35,7 @@ export default function MovimientosPage() {
       setForm((prev) => (prev.productoId ? prev : { ...prev, productoId: productosData[0]?.id ?? 0 }));
       setError(null);
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : "Error al cargar el modulo de movimientos");
+      setError(err instanceof ApiError ? err.message : "Error al cargar el módulo de movimientos");
     } finally {
       setLoading(false);
     }
@@ -53,7 +53,7 @@ export default function MovimientosPage() {
     setFormSuccess(null);
     setRegistrando(true);
     try {
-      const movimiento = await movimientosApi.registrarMovimiento(form);
+      const movimiento = await movimientosApi.registrarMovimiento({ ...form, cantidad: Number(form.cantidad) });
       setFormSuccess(
         `Movimiento registrado. Nuevo stock de ${movimiento.productoNombre}: ${movimiento.stockResultante}`
       );
@@ -70,7 +70,7 @@ export default function MovimientosPage() {
     <div>
       <h1 className="text-2xl font-semibold text-slate-900">Movimientos de Inventario</h1>
       <p className="mt-1 text-sm text-slate-500">
-        Proceso para registrar entradas y salidas de stock. El stock del producto se actualiza automaticamente.
+        Proceso para registrar entradas y salidas de stock. El stock del producto se actualiza automáticamente.
       </p>
 
       {error && <p className="mt-4 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>}
@@ -134,7 +134,7 @@ export default function MovimientosPage() {
                     min={1}
                     required
                     value={form.cantidad}
-                    onChange={(e) => setForm({ ...form, cantidad: Number(e.target.value) })}
+                    onChange={(e) => setForm({ ...form, cantidad: e.target.value })}
                     className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-500"
                   />
                 </div>

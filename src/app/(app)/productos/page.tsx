@@ -8,14 +8,22 @@ import type { Categoria, Producto, ProductoInput } from "@/lib/types";
 import Modal from "@/components/Modal";
 import { useAuth } from "@/context/AuthContext";
 
-const FORM_INICIAL: ProductoInput = {
+// DEF-10: los campos numericos se guardan como texto mientras se editan, para que al
+// borrar el campo quede vacio (y no "0" que luego se convierte en "07").
+type FormProducto = Omit<ProductoInput, "precio" | "stock" | "stockMinimo"> & {
+  precio: string;
+  stock: string;
+  stockMinimo: string;
+};
+
+const FORM_INICIAL: FormProducto = {
   codigo: "",
   nombre: "",
   descripcion: "",
   categoriaId: 0,
-  precio: 0,
-  stock: 0,
-  stockMinimo: 0,
+  precio: "0",
+  stock: "0",
+  stockMinimo: "0",
   activo: true,
 };
 
@@ -31,7 +39,7 @@ export default function ProductosPage() {
 
   const [modalAbierto, setModalAbierto] = useState(false);
   const [editando, setEditando] = useState<Producto | null>(null);
-  const [form, setForm] = useState<ProductoInput>(FORM_INICIAL);
+  const [form, setForm] = useState<FormProducto>(FORM_INICIAL);
   const [formError, setFormError] = useState<string | null>(null);
   const [guardando, setGuardando] = useState(false);
 
@@ -69,9 +77,9 @@ export default function ProductosPage() {
       nombre: producto.nombre,
       descripcion: producto.descripcion ?? "",
       categoriaId: producto.categoriaId,
-      precio: producto.precio,
-      stock: producto.stock,
-      stockMinimo: producto.stockMinimo,
+      precio: String(producto.precio),
+      stock: String(producto.stock),
+      stockMinimo: String(producto.stockMinimo),
       activo: producto.activo,
     });
     setFormError(null);
@@ -82,11 +90,17 @@ export default function ProductosPage() {
     e.preventDefault();
     setGuardando(true);
     setFormError(null);
+    const datos: ProductoInput = {
+      ...form,
+      precio: Number(form.precio),
+      stock: Number(form.stock),
+      stockMinimo: Number(form.stockMinimo),
+    };
     try {
       if (editando) {
-        await productosApi.actualizarProducto(editando.id, form);
+        await productosApi.actualizarProducto(editando.id, datos);
       } else {
-        await productosApi.crearProducto(form);
+        await productosApi.crearProducto(datos);
       }
       setModalAbierto(false);
       await cargar();
@@ -98,7 +112,7 @@ export default function ProductosPage() {
   }
 
   async function handleEliminar(producto: Producto) {
-    if (!confirm(`¿Eliminar el producto "${producto.nombre}"? Quedara inactivo y se conservara su historial de movimientos.`)) return;
+    if (!confirm(`¿Eliminar el producto "${producto.nombre}"? Quedará inactivo y se conservará su historial de movimientos.`)) return;
     try {
       await productosApi.eliminarProducto(producto.id);
       await cargar();
@@ -112,7 +126,7 @@ export default function ProductosPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-semibold text-slate-900">Mantenedor de Productos</h1>
-          <p className="mt-1 text-sm text-slate-500">CRUD principal del catalogo e inventario base.</p>
+          <p className="mt-1 text-sm text-slate-500">Administra los productos del catálogo y su inventario base.</p>
         </div>
         <button
           onClick={abrirNuevo}
@@ -126,7 +140,7 @@ export default function ProductosPage() {
       {error && <p className="mt-4 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>}
       {!loading && categorias.length === 0 && (
         <p className="mt-4 rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-700">
-          Debes crear al menos una categoria antes de registrar productos.
+          Debes crear al menos una categoría antes de registrar productos.
         </p>
       )}
 
@@ -134,9 +148,9 @@ export default function ProductosPage() {
         <table className="min-w-full divide-y divide-slate-200 text-sm">
           <thead className="bg-slate-50">
             <tr>
-              <th className="px-4 py-3 text-left font-medium text-slate-500">Codigo</th>
+              <th className="px-4 py-3 text-left font-medium text-slate-500">Código</th>
               <th className="px-4 py-3 text-left font-medium text-slate-500">Nombre</th>
-              <th className="px-4 py-3 text-left font-medium text-slate-500">Categoria</th>
+              <th className="px-4 py-3 text-left font-medium text-slate-500">Categoría</th>
               <th className="px-4 py-3 text-right font-medium text-slate-500">Precio</th>
               <th className="px-4 py-3 text-right font-medium text-slate-500">Stock</th>
               <th className="px-4 py-3 text-left font-medium text-slate-500">Estado</th>
@@ -210,7 +224,7 @@ export default function ProductosPage() {
           <form onSubmit={handleSubmit} className="space-y-3">
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-sm font-medium text-slate-700">Codigo</label>
+                <label className="block text-sm font-medium text-slate-700">Código</label>
                 <input
                   required
                   value={form.codigo}
@@ -219,7 +233,7 @@ export default function ProductosPage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700">Categoria</label>
+                <label className="block text-sm font-medium text-slate-700">Categoría</label>
                 <select
                   required
                   value={form.categoriaId}
@@ -246,7 +260,7 @@ export default function ProductosPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-700">Descripcion</label>
+              <label className="block text-sm font-medium text-slate-700">Descripción</label>
               <textarea
                 value={form.descripcion}
                 onChange={(e) => setForm({ ...form, descripcion: e.target.value })}
@@ -263,7 +277,7 @@ export default function ProductosPage() {
                   min={0}
                   required
                   value={form.precio}
-                  onChange={(e) => setForm({ ...form, precio: Number(e.target.value) })}
+                  onChange={(e) => setForm({ ...form, precio: e.target.value })}
                   className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-500"
                 />
               </div>
@@ -275,25 +289,25 @@ export default function ProductosPage() {
                   required
                   disabled={!!editando}
                   value={form.stock}
-                  onChange={(e) => setForm({ ...form, stock: Number(e.target.value) })}
+                  onChange={(e) => setForm({ ...form, stock: e.target.value })}
                   className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-500 disabled:bg-slate-100"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700">Stock minimo</label>
+                <label className="block text-sm font-medium text-slate-700">Stock mínimo</label>
                 <input
                   type="number"
                   min={0}
                   required
                   value={form.stockMinimo}
-                  onChange={(e) => setForm({ ...form, stockMinimo: Number(e.target.value) })}
+                  onChange={(e) => setForm({ ...form, stockMinimo: e.target.value })}
                   className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-500"
                 />
               </div>
             </div>
             {editando && (
               <p className="text-xs text-slate-400">
-                El stock se ajusta desde el modulo de Movimientos de Inventario.
+                El stock se ajusta desde el módulo de Movimientos de Inventario.
               </p>
             )}
 

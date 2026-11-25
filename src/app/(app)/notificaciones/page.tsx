@@ -25,7 +25,7 @@ export default function NotificacionesPage() {
       setItems(data);
     } catch (err) {
       setItems([]);
-      setError(err instanceof ApiError ? err.message : "Error al consultar la cola de mensajeria");
+      setError(err instanceof ApiError ? err.message : "Error al consultar las notificaciones");
     } finally {
       setLoading(false);
     }
@@ -38,7 +38,7 @@ export default function NotificacionesPage() {
   if (usuario?.rol !== "ADMIN") {
     return (
       <div className="mt-6 rounded-lg bg-amber-50 px-4 py-3 text-sm text-amber-700">
-        Esta seccion es solo para el rol ADMIN.
+        Esta sección es solo para el rol ADMIN.
       </div>
     );
   }
@@ -47,10 +47,9 @@ export default function NotificacionesPage() {
     <div>
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-semibold text-slate-900">Notificaciones (RabbitMQ)</h1>
+          <h1 className="text-2xl font-semibold text-slate-900">Notificaciones</h1>
           <p className="mt-1 text-sm text-slate-500">
-            Lo que llega de forma asincrona desde <code className="font-mono text-xs">inventory-service</code> por
-            la cola de mensajeria cada vez que alguien registra un movimiento.
+            Avisos que llegan automáticamente cada vez que alguien registra un movimiento de inventario.
           </p>
         </div>
         <button
@@ -70,7 +69,7 @@ export default function NotificacionesPage() {
               : "text-slate-500 hover:text-slate-800"
           }`}
         >
-          Buzon ADMIN (solo operador)
+          Movimientos de operadores
         </button>
         <button
           onClick={() => setPestania("auditoria")}
@@ -80,14 +79,14 @@ export default function NotificacionesPage() {
               : "text-slate-500 hover:text-slate-800"
           }`}
         >
-          Auditoria completa (todos)
+          Auditoría completa (todos)
         </button>
       </div>
 
       <p className="mt-3 text-xs text-slate-400">
         {pestania === "notificaciones"
-          ? "Cola \"cola.notificaciones-admin\" — solo movimientos registrados por un OPERADOR (expiran a las 24 h y, si fallan o expiran, pasan a su DLQ)."
-          : "Cola \"cola.auditoria-movimientos\" — TODOS los movimientos, de operador y de admin (con DLQ si un mensaje falla)."}
+          ? "Solo los movimientos registrados por un OPERADOR. Cada aviso se conserva por 24 horas."
+          : "Todos los movimientos registrados, tanto de operadores como de administradores."}
       </p>
 
       {error && <p className="mt-4 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>}
@@ -114,7 +113,7 @@ export default function NotificacionesPage() {
             {!loading && items.length === 0 && !error && (
               <tr>
                 <td colSpan={7} className="px-4 py-6 text-center text-slate-400">
-                  Todavia no llega ningun mensaje por la cola. Registra un movimiento y dale a &quot;Refrescar&quot;.
+                  Todavía no hay avisos. Registra un movimiento y presiona &quot;Refrescar&quot;.
                 </td>
               </tr>
             )}

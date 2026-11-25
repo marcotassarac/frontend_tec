@@ -77,9 +77,9 @@ export default function ReportesPage() {
         <table className="min-w-full divide-y divide-slate-200 text-sm">
           <thead className="bg-slate-50">
             <tr>
-              <th className="px-4 py-3 text-left font-medium text-slate-500">Codigo</th>
+              <th className="px-4 py-3 text-left font-medium text-slate-500">Código</th>
               <th className="px-4 py-3 text-left font-medium text-slate-500">Nombre</th>
-              <th className="px-4 py-3 text-left font-medium text-slate-500">Categoria</th>
+              <th className="px-4 py-3 text-left font-medium text-slate-500">Categoría</th>
               <th className="px-4 py-3 text-right font-medium text-slate-500">Precio</th>
               <th className="px-4 py-3 text-right font-medium text-slate-500">Stock</th>
               <th className="px-4 py-3 text-right font-medium text-slate-500">Valor total</th>
@@ -152,7 +152,7 @@ export default function ReportesPage() {
                   {kardex.movimientos.length === 0 && (
                     <tr>
                       <td colSpan={6} className="px-3 py-4 text-center text-slate-400">
-                        Este producto aun no registra movimientos
+                        Este producto aún no registra movimientos
                       </td>
                     </tr>
                   )}

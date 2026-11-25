@@ -5,8 +5,8 @@ import { usePathname } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 
 const LINKS: { href: string; label: string; soloAdmin?: boolean }[] = [
-  { href: "/menu", label: "Menu principal" },
-  { href: "/categorias", label: "Categorias" },
+  { href: "/menu", label: "Menú principal" },
+  { href: "/categorias", label: "Categorías" },
   { href: "/productos", label: "Productos" },
   { href: "/movimientos", label: "Movimientos" },
   { href: "/reportes", label: "Reportes" },
@@ -53,7 +53,7 @@ export default function AppNav() {
             onClick={logout}
             className="rounded-md border border-slate-300 px-3 py-1.5 text-xs font-medium text-slate-600 transition hover:bg-slate-100"
           >
-            Cerrar sesion
+            Cerrar sesión
           </button>
         </div>
       </div>

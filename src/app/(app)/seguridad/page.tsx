@@ -22,7 +22,7 @@ export default function SeguridadPage() {
       setTotpEnabled(estado.totpEnabled);
       setError(null);
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : "Error al consultar el estado del 2FA");
+      setError(err instanceof ApiError ? err.message : "Error al consultar el estado de la verificación en dos pasos");
     } finally {
       setLoading(false);
     }
@@ -40,7 +40,7 @@ export default function SeguridadPage() {
       const respuesta = await authApi.setupTwoFactor();
       setSetup(respuesta);
     } catch (err) {
-      setFormError(err instanceof ApiError ? err.message : "No fue posible iniciar la configuracion");
+      setFormError(err instanceof ApiError ? err.message : "No fue posible iniciar la configuración");
     } finally {
       setProcesando(false);
     }
@@ -54,26 +54,26 @@ export default function SeguridadPage() {
       await authApi.enableTwoFactor(code);
       setSetup(null);
       setCode("");
-      setFormSuccess("Autenticacion en dos pasos activada correctamente.");
+      setFormSuccess("Verificación en dos pasos activada correctamente.");
       await cargarEstado();
     } catch (err) {
-      setFormError(err instanceof ApiError ? err.message : "Codigo invalido");
+      setFormError(err instanceof ApiError ? err.message : "Código inválido");
     } finally {
       setProcesando(false);
     }
   }
 
   async function desactivar() {
-    if (!confirm("¿Desactivar la autenticacion en dos pasos?")) return;
+    if (!confirm("¿Desactivar la verificación en dos pasos?")) return;
     setFormError(null);
     setFormSuccess(null);
     setProcesando(true);
     try {
       await authApi.disableTwoFactor();
-      setFormSuccess("Autenticacion en dos pasos desactivada.");
+      setFormSuccess("Verificación en dos pasos desactivada.");
       await cargarEstado();
     } catch (err) {
-      setFormError(err instanceof ApiError ? err.message : "No fue posible desactivar el 2FA");
+      setFormError(err instanceof ApiError ? err.message : "No fue posible desactivar la verificación en dos pasos");
     } finally {
       setProcesando(false);
     }
@@ -83,8 +83,8 @@ export default function SeguridadPage() {
     <div>
       <h1 className="text-2xl font-semibold text-slate-900">Seguridad de la cuenta</h1>
       <p className="mt-1 text-sm text-slate-500">
-        Activa la verificacion en dos pasos (TOTP) usando Google Authenticator, Microsoft Authenticator
-        u otra app compatible.
+        Activa la verificación en dos pasos usando Google Authenticator, Microsoft Authenticator
+        u otra aplicación compatible.
       </p>
 
       {error && <p className="mt-4 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>}
@@ -96,7 +96,7 @@ export default function SeguridadPage() {
           <>
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-semibold text-slate-800">Verificacion en dos pasos</p>
+                <p className="text-sm font-semibold text-slate-800">Verificación en dos pasos</p>
                 <p className="text-sm text-slate-500">
                   Estado actual:{" "}
                   <span className={totpEnabled ? "font-medium text-emerald-600" : "font-medium text-slate-500"}>
@@ -125,7 +125,7 @@ export default function SeguridadPage() {
                 disabled={procesando}
                 className="mt-4 rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700 disabled:opacity-60"
               >
-                {procesando ? "Generando..." : "Activar verificacion en dos pasos"}
+                {procesando ? "Generando..." : "Activar verificación en dos pasos"}
               </button>
             )}
 
@@ -133,19 +133,19 @@ export default function SeguridadPage() {
               <div className="mt-4 space-y-4">
                 <ol className="list-decimal space-y-2 pl-5 text-sm text-slate-600">
                   <li>Abre Google Authenticator, Microsoft Authenticator o similar en tu celular.</li>
-                  <li>Escanea este codigo QR (o ingresa el codigo manual).</li>
-                  <li>Escribe abajo el codigo de 6 digitos que te muestra la app.</li>
+                  <li>Escanea este código QR (o ingresa el código manual).</li>
+                  <li>Escribe abajo el código de 6 dígitos que te muestra la aplicación.</li>
                 </ol>
 
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={setup.qrCodeImageBase64}
-                  alt="Codigo QR para configurar la verificacion en dos pasos"
+                  alt="Código QR para configurar la verificación en dos pasos"
                   className="h-48 w-48 rounded-lg border border-slate-200"
                 />
 
                 <div>
-                  <p className="text-xs font-medium text-slate-500">Codigo manual (si no puedes escanear el QR)</p>
+                  <p className="text-xs font-medium text-slate-500">Código manual (si no puedes escanear el QR)</p>
                   <p className="mt-1 break-all rounded-lg bg-slate-50 px-3 py-2 font-mono text-sm text-slate-700">
                     {setup.secret}
                   </p>
@@ -154,7 +154,7 @@ export default function SeguridadPage() {
                 <form onSubmit={confirmarActivacion} className="space-y-3">
                   <div>
                     <label htmlFor="setup-code" className="block text-sm font-medium text-slate-700">
-                      Codigo de la app
+                      Código de la aplicación
                     </label>
                     <input
                       id="setup-code"

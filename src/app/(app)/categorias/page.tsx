@@ -28,7 +28,7 @@ export default function CategoriasPage() {
       setCategorias(data);
       setError(null);
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : "Error al cargar categorias");
+      setError(err instanceof ApiError ? err.message : "Error al cargar las categorías");
     } finally {
       setLoading(false);
     }
@@ -65,19 +65,19 @@ export default function CategoriasPage() {
       setModalAbierto(false);
       await cargar();
     } catch (err) {
-      setFormError(err instanceof ApiError ? err.message : "No fue posible guardar la categoria");
+      setFormError(err instanceof ApiError ? err.message : "No fue posible guardar la categoría");
     } finally {
       setGuardando(false);
     }
   }
 
   async function handleEliminar(categoria: Categoria) {
-    if (!confirm(`¿Eliminar la categoria "${categoria.nombre}"?`)) return;
+    if (!confirm(`¿Eliminar la categoría "${categoria.nombre}"?`)) return;
     try {
       await categoriasApi.eliminarCategoria(categoria.id);
       await cargar();
     } catch (err) {
-      alert(err instanceof ApiError ? err.message : "No fue posible eliminar la categoria");
+      alert(err instanceof ApiError ? err.message : "No fue posible eliminar la categoría");
     }
   }
 
@@ -85,14 +85,14 @@ export default function CategoriasPage() {
     <div>
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-semibold text-slate-900">Mantenedor de Categorias</h1>
-          <p className="mt-1 text-sm text-slate-500">Administra las categorias del catalogo de productos.</p>
+          <h1 className="text-2xl font-semibold text-slate-900">Mantenedor de Categorías</h1>
+          <p className="mt-1 text-sm text-slate-500">Administra las categorías del catálogo de productos.</p>
         </div>
         <button
           onClick={abrirNueva}
           className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-slate-700"
         >
-          + Nueva categoria
+          + Nueva categoría
         </button>
       </div>
 
@@ -103,7 +103,7 @@ export default function CategoriasPage() {
           <thead className="bg-slate-50">
             <tr>
               <th className="px-4 py-3 text-left font-medium text-slate-500">Nombre</th>
-              <th className="px-4 py-3 text-left font-medium text-slate-500">Descripcion</th>
+              <th className="px-4 py-3 text-left font-medium text-slate-500">Descripción</th>
               <th className="px-4 py-3 text-left font-medium text-slate-500">Estado</th>
               <th className="px-4 py-3 text-right font-medium text-slate-500">Acciones</th>
             </tr>
@@ -116,7 +116,7 @@ export default function CategoriasPage() {
             )}
             {!loading && categorias.length === 0 && (
               <tr>
-                <td colSpan={4} className="px-4 py-6 text-center text-slate-400">No hay categorias registradas</td>
+                <td colSpan={4} className="px-4 py-6 text-center text-slate-400">No hay categorías registradas</td>
               </tr>
             )}
             {categorias.map((categoria) => (
@@ -155,7 +155,7 @@ export default function CategoriasPage() {
       </div>
 
       {modalAbierto && (
-        <Modal title={editando ? "Editar categoria" : "Nueva categoria"} onClose={() => setModalAbierto(false)}>
+        <Modal title={editando ? "Editar categoría" : "Nueva categoría"} onClose={() => setModalAbierto(false)}>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-slate-700">Nombre</label>
@@ -167,7 +167,7 @@ export default function CategoriasPage() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700">Descripcion</label>
+              <label className="block text-sm font-medium text-slate-700">Descripción</label>
               <textarea
                 value={form.descripcion}
                 onChange={(e) => setForm({ ...form, descripcion: e.target.value })}
@@ -181,7 +181,7 @@ export default function CategoriasPage() {
                 checked={form.activo}
                 onChange={(e) => setForm({ ...form, activo: e.target.checked })}
               />
-              Categoria activa
+              Categoría activa
             </label>
 
             {formError && <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{formError}</p>}

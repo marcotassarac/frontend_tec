@@ -6,14 +6,14 @@ import { useAuth } from "@/context/AuthContext";
 const OPCIONES = [
   {
     href: "/categorias",
-    titulo: "Mantenedor de Categorias",
-    descripcion: "Crear, consultar, actualizar y eliminar categorias de productos.",
+    titulo: "Mantenedor de Categorías",
+    descripcion: "Crear, consultar, actualizar y eliminar categorías de productos.",
     icono: "🏷️",
   },
   {
     href: "/productos",
     titulo: "Mantenedor de Productos",
-    descripcion: "CRUD completo del catalogo de productos e inventario base.",
+    descripcion: "Crear, consultar, actualizar y dar de baja los productos del catálogo.",
     icono: "📦",
   },
   {
@@ -31,7 +31,7 @@ const OPCIONES = [
   {
     href: "/seguridad",
     titulo: "Seguridad de la cuenta",
-    descripcion: "Activa la verificacion en dos pasos (TOTP) con tu app autenticadora.",
+    descripcion: "Activa la verificación en dos pasos con tu aplicación autenticadora.",
     icono: "🔐",
   },
 ];
@@ -45,7 +45,7 @@ export default function MenuPage() {
         Bienvenido, {usuario?.nombreCompleto}
       </h1>
       <p className="mt-1 text-sm text-slate-500">
-        Selecciona un modulo para comenzar a trabajar en el sistema de gestion de inventario.
+        Selecciona un módulo para comenzar a trabajar en el sistema de gestión de inventario.
       </p>
 
       <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2">

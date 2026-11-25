@@ -35,7 +35,7 @@ export default function LoginPage() {
         router.replace("/menu");
       }
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : "No fue posible iniciar sesion");
+      setError(err instanceof ApiError ? err.message : "No fue posible iniciar sesión");
     } finally {
       setSubmitting(false);
     }
@@ -50,7 +50,7 @@ export default function LoginPage() {
       await completeTwoFactor(pendingSessionId, code);
       router.replace("/menu");
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : "Codigo invalido");
+      setError(err instanceof ApiError ? err.message : "Código inválido");
     } finally {
       setSubmitting(false);
     }
@@ -63,7 +63,7 @@ export default function LoginPage() {
           <h1 className="text-2xl font-semibold text-slate-900">Gestor de Inventario</h1>
           <p className="mt-1 text-sm text-slate-500">
             {pendingSessionId
-              ? "Ingresa el codigo de tu app autenticadora"
+              ? "Ingresa el código de tu aplicación autenticadora"
               : "Ingresa tus credenciales para continuar"}
           </p>
         </div>
@@ -88,7 +88,7 @@ export default function LoginPage() {
 
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-slate-700">
-                Contrasena
+                Contraseña
               </label>
               <input
                 id="password"
@@ -115,7 +115,7 @@ export default function LoginPage() {
           <form onSubmit={handleSubmitCodigo} className="space-y-4">
             <div>
               <label htmlFor="code" className="block text-sm font-medium text-slate-700">
-                Codigo de verificacion
+                Código de verificación
               </label>
               <input
                 id="code"
@@ -151,7 +151,7 @@ export default function LoginPage() {
               }}
               className="w-full text-center text-xs font-medium text-slate-500 hover:text-slate-700"
             >
-              Volver a ingresar usuario y contrasena
+              Volver a ingresar usuario y contraseña
             </button>
           </form>
         )}
